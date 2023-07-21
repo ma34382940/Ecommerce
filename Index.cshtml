@@ -1,0 +1,55 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
+using Ecommerce.Data;
+using Ecommerce.Models;
+using Microsoft.AspNetCore.Mvc.Rendering;
+
+namespace Ecommerce.Pages.Clocks
+{
+    public class IndexModel : PageModel
+    {
+        private readonly Ecommerce.Data.EcommerceContext _context;
+
+        public IndexModel(Ecommerce.Data.EcommerceContext context)
+        {
+            _context = context;
+        }
+
+        public IList<Clock> Clock { get;set; } = default!;
+
+        [BindProperty(SupportsGet = true)]
+        public string? SearchString { get; set; }
+
+        public SelectList? Prices { get; set; }
+
+        [BindProperty(SupportsGet = true)]
+        public string? ClockPrice { get; set; }
+
+
+        public async Task OnGetAsync()
+        {
+            IQueryable<string> genreQuery = from c in _context.Clock
+                                            orderby c.Price
+                                            select c.Price.ToString();
+            var clocks= from c in _context.Clock
+                        select c;
+
+            if (!string.IsNullOrEmpty(SearchString))
+            {
+                clocks = clocks.Where(s => s.Name.Contains(SearchString));
+            }
+
+            if (!string.IsNullOrEmpty(ClockPrice))
+            {
+                clocks=clocks.Where(x => x.Price.ToString() == ClockPrice);
+            }
+            Prices= new SelectList(await genreQuery.Distinct().ToListAsync());
+            Clock = await clocks.ToListAsync();
+        }
+    }
+}

@@ -1,0 +1,48 @@
+using Ecommerce.Data;
+using Microsoft.EntityFrameworkCore;
+
+namespace Ecommerce.Models
+{
+    public class SeedData
+    {
+        public static void Initialize(IServiceProvider serviceProvider) 
+        {
+            using (var context = new EcommerceContext(
+                serviceProvider.GetRequiredService<
+                    DbContextOptions<EcommerceContext>>()))
+            {
+                if (context == null || context.Clock == null) 
+                {
+                    throw new ArgumentNullException("Null EcommerceContext");
+                }
+
+                if (context.Clock.Any())
+                {
+                    return;   // DB has been seeded
+                }
+
+                context.Clock.AddRange(
+                    new Clock
+                    {
+                        Name = "布穀鳥鐘",
+                        Price = 750,
+                        Quantity = 20,
+                    },
+                    new Clock
+                    {
+                        Name = "鬧鐘",
+                        Price = 450,
+                        Quantity = 100,
+                    },
+                    new Clock
+                    {
+                        Name = "液晶電子鐘",
+                        Price = 400,
+                        Quantity = 300,
+                    }
+                );
+                context.SaveChanges();
+            }
+        }
+    }
+}

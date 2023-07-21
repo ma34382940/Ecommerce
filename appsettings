@@ -1,0 +1,12 @@
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "AllowedHosts": "*",
+  "ConnectionStrings": {
+    "EcommerceContext": "Server=(localdb)\\mssqllocaldb;Database=EcommerceContext-f123b7a2-56b5-4cdb-9d1c-23514cd2753e;Trusted_Connection=True;MultipleActiveResultSets=true"
+  }
+}
